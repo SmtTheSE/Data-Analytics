@@ -1,7 +1,7 @@
 import pandas as pd
 import xlsxwriter
 
-# Reload or reuse df if already defined
+
 df = pd.read_csv('data/transactions_with_revenue_userinfo.csv')
 df['Date'] = pd.to_datetime(df['Date'])
 df['Month'] = df['Date'].dt.to_period('M').astype(str)
@@ -68,7 +68,7 @@ with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:
     insert_chart('New Users', 0, 1, 'Monthly New Users', 'Month', 'New Users')
     insert_chart('Weekday Revenue', 0, 1, 'Avg Revenue by Weekday', 'Day', 'Revenue (VND)')
 
-    # ➕ Generate stacked charts for multi-category sheets
+    # Generate stacked charts for multi-category sheets
 
     def insert_stacked_chart(df, sheet_name, category, stack_col, value_col, chart_title):
         if df.empty:
