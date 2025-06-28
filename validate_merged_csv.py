@@ -45,7 +45,7 @@ def main():
     for col in CRITICAL_COLUMNS:
         if col in df.columns:
             if df[col].dtype == object and df[col].str.strip().eq('').any():
-                print(f"⚠️  Empty strings in column '{col}'")
+                print(f"Empty strings in column '{col}'")
 
     # 5. Sanity check: row count > 0
     if len(df) == 0:
