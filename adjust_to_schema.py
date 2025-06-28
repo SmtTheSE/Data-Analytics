@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-# Load cleaned data (adjust paths as necessary)
+# Load cleaned data
 transactions = pd.read_csv('data/transactions_cleaned.csv')
 commission = pd.read_csv('data/commission_cleaned.csv')
 user_info = pd.read_csv('data/user_info_cleaned.csv')

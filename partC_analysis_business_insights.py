@@ -118,7 +118,7 @@ spender = df.groupby('user_id')['Amount'].sum().sort_values(ascending=False)
 print("Top 5 highest spenders (user_id):")
 print(spender.head())
 
-# Which user segments are less active? (could be targets for campaigns)
+# Which user segments are less active?
 user_by_age = df.groupby('Age')['user_id'].nunique()
 transactions_by_age = df.groupby('Age')['order_id'].count()
 print("\nUser count by Age group:", user_by_age)

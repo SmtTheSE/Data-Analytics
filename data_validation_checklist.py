@@ -46,7 +46,7 @@ if 'gender' in user_info.columns:
 if 'location' in user_info.columns:
     print("Location sample:", user_info['location'].unique()[:10])
 
-# Logical checks -- FIXED: use merge to avoid length mismatch
+# Logical checks
 if 'first_tran_date' in user_info.columns and 'date' in transactions.columns:
     transactions['date'] = pd.to_datetime(transactions['date'], errors='coerce')
     user_info['first_tran_date'] = pd.to_datetime(user_info['first_tran_date'], errors='coerce')

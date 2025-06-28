@@ -1,10 +1,8 @@
 import pandas as pd
 import sys
 
-# Path to your merged CSV
 CSV_PATH = 'data/master_merged.csv'
 
-# List your important columns here
 CRITICAL_COLUMNS = ['transaction_id', 'user_id', 'Merchant_id']  # adjust as needed
 
 

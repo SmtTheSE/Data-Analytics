@@ -136,7 +136,7 @@ commission.to_csv('data/commission_cleaned.csv', index=False)
 user_info.to_csv('data/user_info_cleaned.csv', index=False)
 print("\n Cleaned data saved to 'data/'")
 
-# --- 18. Visual Data Audit - Save Plots (only if data exists) ---
+# --- 18. Visual Data Audit - Save Plots  ---
 if 'amount' in transactions.columns and not transactions['amount'].dropna().empty:
     plt.figure(figsize=(8,4))
     transactions['amount'].hist(bins=50)
