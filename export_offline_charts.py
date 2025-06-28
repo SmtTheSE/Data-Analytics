@@ -46,10 +46,10 @@ with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:
 
     workbook = writer.book
 
-    # Helper to insert column chart in any sheet
+    # Helper to insert column chart
     def insert_chart(sheet_name, label_col, value_col, chart_title, x_axis_name, y_axis_name):
         worksheet = writer.sheets[sheet_name]
-        data_len = worksheet.dim_rowmax  # Number of rows in data
+        data_len = worksheet.dim_rowmax
         chart = workbook.add_chart({'type': 'column'})
         chart.add_series({
             'name': [sheet_name, 0, value_col],
@@ -61,21 +61,55 @@ with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:
         chart.set_y_axis({'name': y_axis_name})
         worksheet.insert_chart('E2', chart)
 
-    # Insert charts for each basic sheet
+    # Charts for basic sheets
     insert_chart('Monthly Revenue', 0, 1, 'Monthly Revenue', 'Month', 'Revenue (VND)')
     insert_chart('Transactions', 0, 1, 'Monthly Transactions', 'Month', 'Number of Transactions')
     insert_chart('Active Users', 0, 1, 'Monthly Active Users', 'Month', 'Active Users')
     insert_chart('New Users', 0, 1, 'Monthly New Users', 'Month', 'New Users')
     insert_chart('Weekday Revenue', 0, 1, 'Avg Revenue by Weekday', 'Day', 'Revenue (VND)')
 
+    # ➕ Generate stacked charts for multi-category sheets
 
-    # Optional: add charts for multi-category sheets
+    def insert_stacked_chart(df, sheet_name, category, stack_col, value_col, chart_title):
+        if df.empty:
+            return
+        # Pivot the data
+        pivot_df = df.pivot(index=category, columns=stack_col, values=value_col).fillna(0).reset_index()
+        pivot_df.to_excel(writer, sheet_name=sheet_name, index=False)
+        worksheet = writer.sheets[sheet_name]
+
+        chart = workbook.add_chart({'type': 'column', 'subtype': 'stacked'})
+        for col_idx in range(1, len(pivot_df.columns)):
+            chart.add_series({
+                'name':       [sheet_name, 0, col_idx],
+                'categories': [sheet_name, 1, 0, len(pivot_df), 0],
+                'values':     [sheet_name, 1, col_idx, len(pivot_df), col_idx],
+            })
+        chart.set_title({'name': chart_title})
+        chart.set_x_axis({'name': category})
+        chart.set_y_axis({'name': 'Revenue (VND)'})
+        worksheet.insert_chart('J2', chart)
+
+    #  Add stacked merchant chart
     if not merchant_revenue.empty:
-        worksheet = writer.sheets['Merchant Revenue']
-        worksheet.write('E1', 'Tip: Pivot this in Excel for stacked view')
+        insert_stacked_chart(
+            df=merchant_revenue,
+            sheet_name='Stacked Merchant Revenue',
+            category='Month',
+            stack_col=merchant_col,
+            value_col='Revenue',
+            chart_title='Stacked Revenue by Merchant'
+        )
 
-    worksheet = writer.sheets['Age Revenue']
-    worksheet.write('E1', 'Tip: Use Excel PivotChart for Age breakdown')
-
+    #  Add stacked age group chart
+    insert_stacked_chart(
+        df=age_revenue,
+        sheet_name='Stacked Age Revenue',
+        category='Month',
+        stack_col='Age',
+        value_col='Revenue',
+        chart_title='Stacked Revenue by Age Group'
+    )
 
 print(f" Excel dashboard exported to {output_path}")
+

@@ -134,4 +134,4 @@ summary_data = {
 summary_df = pd.DataFrame(summary_data)
 summary_df.to_csv("data/summary_results.csv", index=False, encoding='utf-8-sig')
 
-print("\n📄 Summary results saved as: data/summary_results.csv")
+print("\n Summary results saved as: data/summary_results.csv")
